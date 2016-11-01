@@ -14,15 +14,16 @@ F_dim = 3          #3x3
 pool_dim = 2       #pool layer dimension
 
 
-LR = 0.6e-3                                                 #learning rate
-reg_rate = 8e-5
-num_class = 200
-keep_rate = 0.8
-batch_size = 32
-num_epoch = 20
-conv_filter_list = [32, 32, 64, 64, 128, 128]
-FC_layer_list = [600, 600, 200]
-
+LR = 0.6e-3                                                              #learning rate
+reg_rate = 8e-5                                                          #regularization rate
+num_class = 200                                                          #number of classes  
+keep_rate = 0.8                                                          #keep_rate = 1 - dropout rate 
+batch_size = 32                                                          #batch size
+num_epoch = 20                                                           #number of epoch want to run
+conv_filter_list = [32, 32, 64, 64, 128, 128]                            #conv layer filter channel list 
+FC_layer_list = [600, 600, 200]                                          #FC layer size list
+train_data_path = '/home/lsy/cs231n/new_data/tiny-imagenet-200/train'    #path to train dataset
+val_data_path = '/home/lsy/cs231n/tiny-imagenet-200/val'                 #path to val dataset
 
 #placeholder layer
 X   = tf.placeholder(tf.float32, shape=[None, img_H, img_W, img_C])
@@ -32,7 +33,6 @@ training = tf.placeholder(tf.bool)
 
 #obtain the score matrix, softmax is not applied yet
 output = CNN(X, conv_filter_list, FC_layer_list, keep_prob, training) 
-
 loss = Loss(output, y_t, reg_rate)
 acc = Accuracy(output, y_t)
 train_step = Train(LR, loss)
@@ -47,14 +47,16 @@ init_op = tf.group(tf.initialize_all_variables())
 
 with tf.Session() as test:
       test.run(init_op)
+
+      #save tensorboard data in ./train directory
       train_writer = tf.train.SummaryWriter('./train', test.graph)
  
       #load process training images
-      train_imgs, train_labels = LoadProcessImages('/home/lsy/cs231n/new_data/tiny-imagenet-200/train',
-                                                   'training')
+      train_imgs, train_labels = LoadProcessImages(train_data_path, 'training')
+
       #load process val images
-      val_imgs, val_labels = LoadProcessImages('/home/lsy/cs231n/tiny-imagenet-200/val',
-                                               'val')
+      val_imgs, val_labels = LoadProcessImages(val_data_path, 'val')
+
       data_size = train_labels.shape[0]
       print_iter = 10
       num_iter = int(num_epoch * data_size / batch_size) 
