@@ -86,12 +86,13 @@ def FCLayer(x, out_size, keep_prob, is_output_layer=0, training_mode=1):
       layer_out = tf.matmul(x, W) + b
       if not is_output_layer:
             layer_out = tf.contrib.layers.batch_norm(layer_out, decay=0.99,
-                                                     center=True, scale=True, epsilon=1e-10,
+                                                     center=True, scale=True, 
+                                                     epsilon=1e-10,
                                                      updates_collections=None,
                                                      is_training=training_mode)
             layer_out = tf.nn.relu(layer_out)
 
-            #add dropout
-            layer_out = tf.nn.dropout(layer_out, keep_prob)
-
+            #add dropout for training
+            if training_mode is not None:
+                  layer_out = tf.nn.dropout(layer_out, keep_prob)
       return layer_out
