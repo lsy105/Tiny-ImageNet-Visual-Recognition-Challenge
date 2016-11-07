@@ -1,6 +1,8 @@
 import tensorflow as tf
 from util import *
 
+
+
 def Conv1x1(x, out_C, training_mode):
       """ 
       conv layer with 1x1 filter 
