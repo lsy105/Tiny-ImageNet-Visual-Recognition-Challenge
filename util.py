@@ -184,6 +184,8 @@ def Train(LR, loss):
       train_step = tf.train.AdamOptimizer(learning_rate=LR).minimize(loss)
       return train_step
 
+
+
 def PrintTestResult(file_list, result, output_file):
       """
       print test result with the format "image_name class"
